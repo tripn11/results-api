@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import schoolRouter from './routers/schools.js';
 import studentRouter from './routers/students.js';
+import resultRouter from './routers/results.js';
 
 
 
@@ -11,6 +12,7 @@ const port = process.env.PORT
 app.use(express.json())
 app.use(schoolRouter)
 app.use(studentRouter)
+app.use(resultRouter)
 
 
 app.listen(port, () => {

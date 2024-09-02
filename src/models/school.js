@@ -9,7 +9,8 @@ const schoolSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim:true,
-        immutable:true
+        immutable:true,
+        unique:true
     },
     email: {
         type:String,
@@ -35,9 +36,9 @@ const schoolSchema = new mongoose.Schema({
             }
         }
     },
-    address: {
-        type: String,
-        trim:true
+    address: { 
+        type: String, 
+        trim:true 
     },
     motto: {
         type: String,
@@ -45,17 +46,46 @@ const schoolSchema = new mongoose.Schema({
     },
     classes:{
         nursery:{
-            classes:[String],
+            classes:[{
+                class:String,
+                code:String,
+                _id:false
+            }],
+            grading:[String],
             subjects:[String]
         },
         primary:{
-            classes:[String],
+            classes:[{
+                class:String,
+                code:String,
+                _id:false
+            }],
+            grading:[String],
             subjects:[String]
         },
-        secondary:{
-            classes:[String],
+        juniorSecondary:{
+            classes:[{
+                class:String,
+                code:String,
+                _id:false
+            }],
+            grading:[String],
+            subjects:[String]
+        },
+        seniorSecondary:{
+            classes:[{
+                class:String,
+                code:String,
+                _id:false
+            }],
+            grading:[String],
             subjects:[String]
         }
+    },
+    termInfo: {
+        totalTimesSchoolOpened:Number,
+        currentSession:String,
+        currentTerm:String
     },
     tokens: [String]
 })
@@ -72,6 +102,13 @@ schoolSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({_id:this._id},process.env.JWT_SECRET_CODE)
     this.tokens.push(token)
     return token
+}
+
+schoolSchema.methods.toJSON = function () {
+    const school = this.toObject();
+    delete school.password;
+    delete school.__v
+    return school
 }
 
 export const School = mongoose.model('School', schoolSchema)
