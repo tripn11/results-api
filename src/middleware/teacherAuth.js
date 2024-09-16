@@ -12,6 +12,7 @@ const teacherAuth = async (req,res,next) =>{
         teachersCode = teachersCode.code
 
         const [code,teachersClass] = teachersCode.split("-")
+
         const school = await School.findOne({
             $or: [
                 {"classes.nursery.classes":{$elemMatch:{class:teachersClass,code}}},
@@ -29,10 +30,15 @@ const teacherAuth = async (req,res,next) =>{
         .find(section => school.classes[section].classes
         .some(c=>c.code===code && c.class===teachersClass))
 
+        const teachersName = school.classes[section].classes
+        .filter(clas => clas.class === teachersClass)
+        .teachersName
+
  
         req.school = school;
         req.section = section;
         req.class = teachersClass;
+        req.teachersName = teachersName;
         next()
 
     }catch (e) {

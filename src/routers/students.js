@@ -31,7 +31,7 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
 
         if(isAdminReady) {
             const results = await Promise.all(students.map(async(student)=>{
-                const studentResult = await student.getTermResult(req.school,req.section)
+                const studentResult = await student.getTermResult(req.school,req.section,req.teachersName)
                 return studentResult;
             }))
             res.send({students,results})

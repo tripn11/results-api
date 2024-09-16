@@ -37,7 +37,8 @@ const studentSchema = new mongoose.Schema({
     weight:Number,
     school:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true
+        required:true,
+        ref:"School"
     }
 })
 
@@ -69,7 +70,7 @@ studentSchema.virtual('results', {
     foreignField:'owner'
 })
 
-studentSchema.methods.getTermResult = async function (school,section) {
+studentSchema.methods.getTermResult = async function (school,section,teachersName) {
     const grading= school.classes[section].grading;
     const sectionSubjects = school.classes[section].subjects;
     const currentTerm = school.termInfo.currentTerm
@@ -104,12 +105,20 @@ studentSchema.methods.getTermResult = async function (school,section) {
             owner:this._id,
             session:currentSession,
             term:currentTerm,
+            teachersName,
             subjects
         }
     
         return initialResult
     }     
 }
+
+studentSchema.methods.totalStudentsInClass = async function () {
+    await this.populate('school');
+    const totalStudents = await Student.countDocuments({school:this.school._id,class:this.class});
+    return totalStudents;
+}
+
 
 studentSchema.statics.getStudentsInClass = async (schoolId,level,page=1) => {
     let skip = (page-1) * 10
@@ -119,6 +128,28 @@ studentSchema.statics.getStudentsInClass = async (schoolId,level,page=1) => {
     .skip(skip)
     
     return students
+}
+
+studentSchema.statics.promoteStudents = async school => {
+    const nurseryClasses = school.classes.nursery.classes.map(eachClass=>eachClass.class)
+    const primaryClasses = school.classes.primary.classes.map(eachClass=>eachClass.class)
+    const juniorSecondaryClasses = school.classes.juniorSecondary.classes.map(eachClass=>eachClass.class)
+    const seniorSecondaryClasses = school.classes.seniorSecondary.classes.map(eachClass=>eachClass.class)
+    const allClasses = nurseryClasses.concat(primaryClasses,juniorSecondaryClasses,seniorSecondaryClasses)
+
+    await school.populate('students')
+
+    await Promise.all(school.students.forEach( async student=>{
+        let index = allClasses.findIndex(student.class)
+        if(index === (allClasses.length-1)){
+            student.class = 'graduated'
+            await student.save();
+        }else {
+            index++;
+            student.class = allClasses[index]
+            await student.save()
+        }
+    }))
 }
 
 export const Student = mongoose.model('Student', studentSchema)

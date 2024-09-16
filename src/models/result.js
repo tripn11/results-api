@@ -1,15 +1,20 @@
 import mongoose from 'mongoose';
-import { Student } from './student.js';
 
 
 const resultSchema = new mongoose.Schema({
     owner: {
         type:mongoose.Schema.Types.ObjectId,
-        ref:Student,
+        ref:'Student',
         required:true
     },
     attendance: Number,
+    caAverage:Number,
+    caTotal:Number,
+    average:Number,
+    total:Number,
+    teachersName:String,
     teachersComment:String,
+    principalsComment:String,
     session:{
         type:String,
         required:true

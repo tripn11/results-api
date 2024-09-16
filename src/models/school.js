@@ -18,9 +18,17 @@ const schoolSchema = new mongoose.Schema({
         lowercase:true,
         unique:true,
         immutable:true,
-        validate (value) {
-            if(!validator.isEmail(value)) {
+        validate (email) {
+            if(!validator.isEmail(email)) {
                 throw new Error('Email is not valid')
+            }
+        }
+    },
+    phoneNumber:{
+        type:Number,
+        validate(number) {
+            if(!validator.isMobilePhone(number,'NG')) {
+                throw new Error('Not a Phone Number')
             }
         }
     },
@@ -49,6 +57,7 @@ const schoolSchema = new mongoose.Schema({
             classes:[{
                 class:String,
                 code:String,
+                teachersName:String,
                 _id:false
             }],
             grading:[String],
@@ -58,6 +67,7 @@ const schoolSchema = new mongoose.Schema({
             classes:[{
                 class:String,
                 code:String,
+                teachersName:String,
                 _id:false
             }],
             grading:[String],
@@ -67,6 +77,7 @@ const schoolSchema = new mongoose.Schema({
             classes:[{
                 class:String,
                 code:String,
+                teachersName:String,
                 _id:false
             }],
             grading:[String],
@@ -76,6 +87,7 @@ const schoolSchema = new mongoose.Schema({
             classes:[{
                 class:String,
                 code:String,
+                teachersName:String,
                 _id:false
             }],
             grading:[String],
@@ -96,6 +108,12 @@ schoolSchema.pre('save', async function (next) {
         next()
     }
     next();
+})
+
+schoolSchema.virtual("students", {
+    ref:'Student',
+    localField:'_id',
+    foreignField:'school'
 })
 
 schoolSchema.methods.generateAuthToken = function () {
