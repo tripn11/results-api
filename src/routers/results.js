@@ -24,16 +24,15 @@ router.put('/updateResult/:id',teacherAuth, async(req,res) => {
     }
 })
 
-
-router.get('/finalResult', async(req,res) => {
+router.post('/finalResult', async(req,res) => {
     try{
-        const result = await Result.findOne({_id:req.query.id})
-        const finalResult = await pdfGenerator(result)
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename="result.pdf"');
-        res.setHeader('Content-Length', finalResult.length);
-        res.send(Buffer.from(finalResult))
-        console.log("doone")
+        const results = await Promise.all(req.body.results.map(async id=>{
+            const result = await Result.findOne({_id:id})
+            return result
+        }))
+        const finalResults = await pdfGenerator(results,req.body.type)
+        res.json(finalResults)
+        console.log("done")
     }catch(e) {
         res.status(400).send(e.message)
     }

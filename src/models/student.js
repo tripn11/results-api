@@ -114,8 +114,7 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
 }
 
 studentSchema.methods.totalStudentsInClass = async function () {
-    await this.populate('school');
-    const totalStudents = await Student.countDocuments({school:this.school._id,class:this.class});
+    const totalStudents = await Student.countDocuments({school:this.school,class:this.class});
     return totalStudents;
 }
 
