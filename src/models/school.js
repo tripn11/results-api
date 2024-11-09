@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import {codeGenerator} from '../middleware/codeGenerator.js';
 
 const schoolSchema = new mongoose.Schema({
     name: {
@@ -10,7 +10,8 @@ const schoolSchema = new mongoose.Schema({
         required: true,
         trim:true,
         immutable:true,
-        unique:true
+        unique:true,
+        lowercase:true
     },
     email: {
         type:String,
@@ -52,60 +53,123 @@ const schoolSchema = new mongoose.Schema({
         type: String,
         trim:true 
     },
-    classes:{
-        nursery:{
-            classes:[{
-                class:String,
-                code:String,
-                teachersName:String,
-                _id:false
-            }],
-            grading:[String],
-            subjects:[String]
-        },
-        primary:{
-            classes:[{
-                class:String,
-                code:String,
-                teachersName:String,
-                _id:false
-            }],
-            grading:[String],
-            subjects:[String]
-        },
-        juniorSecondary:{
-            classes:[{
-                class:String,
-                code:String,
-                teachersName:String,
-                _id:false
-            }],
-            grading:[String],
-            subjects:[String]
-        },
-        seniorSecondary:{
-            classes:[{
-                class:String,
-                code:String,
-                teachersName:String,
-                _id:false
-            }],
-            grading:[String],
-            subjects:[String]
-        }
-    },
     termInfo: {
         totalTimesSchoolOpened:Number,
         currentSession:String,
         currentTerm:String
     },
-    tokens: [String]
+    tokens: [String],
+    classes:{
+        nursery:{
+            classes:{
+                type:[{
+                    class:String,
+                    code:String,
+                    teachersName:String,
+                    _id:false
+                }],
+                default:[
+                    {class:'nursery 1'},
+                    {class:'nursery 2'},
+                    {class:'nursery 3'}
+                ]
+            },
+            grading:{
+                type:[String],
+                default:['note-10','classwork-5','homework-5','test-20']
+            },
+            subjects:{
+                type:[String],
+                default:['mathematics','english language','verbal reasoning']
+            }
+        },
+        primary:{
+            classes:{
+                type:[{
+                    class:String,
+                    code:String,
+                    teachersName:String,
+                    _id:false
+                }],
+                default:[
+                    {class:'year 1'},
+                    {class:'year 2'},
+                    {class:'year 3'},
+                    {class:'year 4'},
+                    {class:'year 5'}
+                ]
+            },
+            grading:{
+                type:[String],
+                default:['note-10','classwork-5','homework-5','test-20']
+            },
+            subjects:{
+                type:[String],
+                default:['mathematics','english language','verbal reasoning','quantitative reasoning']
+            }
+        },
+        juniorSecondary:{
+            classes:{
+                type:[{
+                    class:String,
+                    code:String,
+                    teachersName:String,
+                    _id:false
+                }],
+                default:[
+                    {class:'jss 1'},
+                    {class:'jss 2'},
+                    {class:'jss 3'}
+                ],
+            },
+            grading:{
+                type:[String],
+                default:['note-10','classwork-5','homework-5','test-20']
+            },
+            subjects:{
+                type:[String],
+                default:['mathematics','english language','basic science','basic technology','business studies']
+            }
+        },
+        seniorSecondary:{
+            classes:{
+                type:[{
+                    class:String,
+                    code:String,
+                    teachersName:String,
+                    _id:false
+                }],
+                default:[
+                    {class:'ss 1'},
+                    {class:'ss 2'},
+                    {class:'ss 3'}
+                ],
+            },
+            grading:{
+                type:[String],
+                default:['note-10','classwork-5','homework-5','test-20']
+            },
+            subjects:{
+                type:[String],
+                default:['mathematics','english language','physics','chemistry','biology','government','economics']
+            }
+        }
+    }
 })
 
 schoolSchema.pre('save', async function (next) {
-    if (this.isNew || this.isModified('password')) {
+    if(this.isNew) {
+        const sections = Object.keys(this.classes)
+        sections.forEach(section=>{
+            const classes = this.classes[section].classes.map(eachClass=>{
+                const code = codeGenerator(6)
+                return {...eachClass,code}
+            })
+            this.classes[section].classes=classes;
+        })
+        
+    }if(this.isNew || this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)
-        next()
     }
     next();
 })

@@ -7,12 +7,26 @@ import auth from '../middleware/auth.js';
 const router = new express.Router();
 
 router.post("/schools", async (req, res) => {
-    const school = new School(req.body)
     try {
+        const school = new School(req.body)
         const token = school.generateAuthToken()
         await school.save()
         res.send({school,token})
     } catch (e) {
+        console.log(e)
+        if (e.name === 'ValidationError') {
+            const error = {};
+            Object.keys(e.errors).forEach((key) => {
+                error[key] = e.errors[key].message; 
+            });
+
+            return res.status(400).json({ error });
+        }
+        if (e.code === 11000) {
+            const duplicateField = Object.keys(e.keyPattern)[0];
+            const message = `The ${duplicateField} is already in use. Please use a different ${duplicateField}.`;
+            return res.status(400).json({ error: {duplicate:message} });
+        }
         res.status(400).send(e.message)
     }
 })
@@ -20,14 +34,17 @@ router.post("/schools", async (req, res) => {
 router.post("/schools/login", async (req,res) => {
     try {
         const school = await School.findOne({email:req.body.email}) 
+        if(school===null) {
+            throw new Error ('Incorrect Login Details')
+        }
         const correctPassword = await bcrypt.compare(req.body.password, school.password)
 
-        if(school && correctPassword) {
+        if(correctPassword) {
             const token = school.generateAuthToken()
             await school.save()
             res.status(200).send({school,token})
-        }else {
-            throw new Error('No school found')
+        }else{
+            throw new Error('Incorrect Login Details')
         }
     }catch (e) {
         res.status(400).send(e.message)
