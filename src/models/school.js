@@ -26,9 +26,9 @@ const schoolSchema = new mongoose.Schema({
         }
     },
     phoneNumber:{
-        type:Number,
+        type:String,
         validate(number) {
-            if(!validator.isMobilePhone(number,'NG')) {
+            if(!validator.isMobilePhone(number,'en-NG')) {
                 throw new Error('Not a Phone Number')
             }
         }

@@ -69,17 +69,7 @@ router.post("/schools/logoutAll", auth, (req,res)=>{
 
 router.patch("/schools", auth, async (req,res) => {
     try{
-        const key = Object.keys(req.body)[0]
-        const value = req.body[key];
-        const keys = key.split('.');
-        let obj = req.school;
-        
-        for (let i = 0; i < keys.length - 1; i++) {
-            obj = obj[keys[i]];
-        }
-        
-        obj[keys[keys.length - 1]] = value
-        
+        Object.assign(req.school, req.body)        
         await req.school.save()
         res.send('updated')
     }catch(e) {
