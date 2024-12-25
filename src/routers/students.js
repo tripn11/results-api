@@ -15,6 +15,20 @@ router.post('/students', auth, async(req,res) =>{
     }
 })
 
+router.get('/sectionStudents', auth, async(req,res) => {
+    try {
+        const section = req.query.section;
+        const classes = req.school.classes[section].classes.map(eachClass=>eachClass.class)
+        const students = await Student.find({school:req.school._id,class:classes})
+        if(students.length===0){
+            throw new Error('No students in this section')
+        }
+        res.status(200).send(students)
+    }catch (e) {
+        res.status(400).send(e.message)
+    }
+})
+
 router.get('/classStudents',teacherAuth, async(req,res) => {
     try{
         const grading= req.school.classes[req.section].grading.length>0;

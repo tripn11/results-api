@@ -69,9 +69,9 @@ router.post("/schools/logoutAll", auth, (req,res)=>{
 
 router.patch("/schools", auth, async (req,res) => {
     try{
-        Object.assign(req.school, req.body)        
+        req.school.set(req.body)        
         await req.school.save()
-        res.send('updated')
+        res.send("updated")
     }catch(e) {
         res.status(400).send(e.message)
     }

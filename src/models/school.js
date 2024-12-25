@@ -54,7 +54,10 @@ const schoolSchema = new mongoose.Schema({
         trim:true 
     },
     termInfo: {
-        totalTimesSchoolOpened:Number,
+        totalTimesSchoolOpened:{
+            type:Number,
+            default:0
+        },
         currentSession:String,
         currentTerm:String
     },
@@ -65,6 +68,7 @@ const schoolSchema = new mongoose.Schema({
                 type:[{
                     class:String,
                     code:String,
+                    teachersTitle:String,
                     teachersName:String,
                     _id:false
                 }],
@@ -76,11 +80,11 @@ const schoolSchema = new mongoose.Schema({
             },
             grading:{
                 type:[String],
-                default:['note-10','classwork-5','homework-5','test-20']
+                default:['note-10-1','classwork-5-2','homework-5-3','test-20-4']
             },
             subjects:{
                 type:[String],
-                default:['mathematics','english language','verbal reasoning']
+                default:['mathematics-1','english language-2']
             }
         },
         primary:{
@@ -88,6 +92,7 @@ const schoolSchema = new mongoose.Schema({
                 type:[{
                     class:String,
                     code:String,
+                    teachersTitle:String,
                     teachersName:String,
                     _id:false
                 }],
@@ -101,11 +106,11 @@ const schoolSchema = new mongoose.Schema({
             },
             grading:{
                 type:[String],
-                default:['note-10','classwork-5','homework-5','test-20']
+                default:['note-10-1','classwork-5-2','homework-5-3','test-20-4']
             },
             subjects:{
                 type:[String],
-                default:['mathematics','english language','verbal reasoning','quantitative reasoning']
+                default:['mathematics-1','english language-2','verbal reasoning-3','quantitative reasoning-4']
             }
         },
         juniorSecondary:{
@@ -113,6 +118,7 @@ const schoolSchema = new mongoose.Schema({
                 type:[{
                     class:String,
                     code:String,
+                    teachersTitle:String,
                     teachersName:String,
                     _id:false
                 }],
@@ -124,11 +130,11 @@ const schoolSchema = new mongoose.Schema({
             },
             grading:{
                 type:[String],
-                default:['note-10','classwork-5','homework-5','test-20']
+                default:['note-10-1','classwork-5-2','homework-5-3','test-20-4']
             },
             subjects:{
                 type:[String],
-                default:['mathematics','english language','basic science','basic technology','business studies']
+                default:['mathematics-1','english language-2','basic science-3','basic technology-4','business studies-5']
             }
         },
         seniorSecondary:{
@@ -136,6 +142,7 @@ const schoolSchema = new mongoose.Schema({
                 type:[{
                     class:String,
                     code:String,
+                    teachersTitle:String,
                     teachersName:String,
                     _id:false
                 }],
@@ -147,11 +154,11 @@ const schoolSchema = new mongoose.Schema({
             },
             grading:{
                 type:[String],
-                default:['note-10','classwork-5','homework-5','test-20']
+                default:['note-10-1','classwork-5-2','homework-5-3','test-20-4']
             },
             subjects:{
                 type:[String],
-                default:['mathematics','english language','physics','chemistry','biology','government','economics']
+                default:['mathematics-1','english language-2','physics-3','chemistry-4','biology-5','government-6','economics-7']
             }
         }
     }
