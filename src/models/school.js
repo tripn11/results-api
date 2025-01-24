@@ -169,7 +169,7 @@ schoolSchema.pre('save', async function (next) {
         const sections = Object.keys(this.classes)
         sections.forEach(section=>{
             const classes = this.classes[section].classes.map(eachClass=>{
-                const code = codeGenerator(6)
+                const code = codeGenerator(7)
                 return {...eachClass,code}
             })
             this.classes[section].classes=classes;

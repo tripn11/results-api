@@ -22,7 +22,7 @@ const studentSchema = new mongoose.Schema({
         required:true,
     },
     dateOfBirth:{
-        type:Number, 
+        type:Date, 
         required:true 
     },
     sex:{
@@ -35,6 +35,10 @@ const studentSchema = new mongoose.Schema({
     },
     height:Number,
     weight:Number,
+    status:{
+        type:String,
+        default:'active'
+    },
     school:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
@@ -127,6 +131,11 @@ studentSchema.statics.getStudentsInClass = async (schoolId,level,page=1) => {
     .skip(skip)
     
     return students
+}
+
+studentSchema.statics.totalStudentsInSchool = async (schoolId) => {
+    const total = await Student.countDocuments({school:schoolId,status:'active'})
+    return total
 }
 
 studentSchema.statics.promoteStudents = async school => {
