@@ -15,6 +15,10 @@ const resultSchema = new mongoose.Schema({
     teachersName:String,
     teachersComment:String,
     principalsComment:String,
+    className: {
+        type:String,
+        required:true
+    },
     session:{
         type:String,
         required:true

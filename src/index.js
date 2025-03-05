@@ -22,11 +22,14 @@ app.listen(port, () => {
 })
 
 
+//handle error in result
+//there should be a button that moves everyone to a new class.
+//if you check a past result, the total students in class will be the students current classmates not at the point of interest.
+//provision to upload the school logo and result sheets for different exams and types of results.
 
 
 
 
 
-
-//   cd ../../../../../Program Files\MongoDB\Server\7.0\bin
-//   mongod --dbpath C:\Users\Noble\Mongodb-data
+//   cd ../../../../../Program Files\MongoDB\Server\8.0\bin
+//   mongod --dbpath C:\Users\user\Mongodb-data

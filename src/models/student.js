@@ -47,16 +47,11 @@ const studentSchema = new mongoose.Schema({
 })
 
 studentSchema.virtual('age').get(function () {
-    if(!this.dateOfBirth) {
-        return null
-    }
-
-    const dateOfBirth = new Date(this.dateOfBirth)
     const today = new Date()
-    let age = today.getFullYear() - dateOfBirth.getFullYear();
-    const monthDifference = today.getMonth() - dateOfBirth.getMonth();
+    let age = today.getFullYear() - this.dateOfBirth.getFullYear();
+    const monthDifference = today.getMonth() - this.dateOfBirth.getMonth();
   
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dateOfBirth.getDate())) {
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < this.dateOfBirth.getDate())) {
       age--;
     }
   
