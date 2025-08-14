@@ -69,7 +69,7 @@ router.patch('/students/:id', auth, async(req,res) =>{
         const student = await Student.findOne({_id,school:req.school._id})
         student.set(req.body)
         await student.save()
-        res.send(student)
+        res.send("student has been updated")
     } catch(e) {
         res.status(400).send(e.message)
     }
@@ -86,5 +86,13 @@ router.delete('/students/:id', auth, async(req,res) => {
     }
 })
 
+router.post('/students/promote', auth, async (req, res) => {
+    try {
+        await Student.promoteStudents(req.school);
+        res.send({ message: 'All students have been promoted successfully.' });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+});
 
 export default router;

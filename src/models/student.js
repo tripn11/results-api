@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import codeGenerator from '../middleware/codeGenerator.js';
 
 const studentSchema = new mongoose.Schema({
     name:{
@@ -35,6 +36,7 @@ const studentSchema = new mongoose.Schema({
     },
     height:Number,
     weight:Number,
+    code:String,
     status:{
         type:String,
         default:'active'
@@ -44,6 +46,14 @@ const studentSchema = new mongoose.Schema({
         required:true,
         ref:"School"
     }
+})
+
+studentSchema.pre('save', async function (next) {
+    if(this.isNew) {
+        this.code = codeGenerator(7)
+    }
+
+    next();
 })
 
 studentSchema.virtual('age').get(function () {
@@ -142,10 +152,14 @@ studentSchema.statics.promoteStudents = async school => {
 
     await school.populate('students')
 
-    await Promise.all(school.students.forEach( async student=>{
-        let index = allClasses.findIndex(student.class)
+    await Promise.all(school.students.map( async student=>{
+        let index = allClasses.findIndex(c=> c === student.class)
+        if(index === -1) {
+            return
+        }
         if(index === (allClasses.length-1)){
             student.class = 'graduated'
+            student.status = 'graduated'
             await student.save();
         }else {
             index++;

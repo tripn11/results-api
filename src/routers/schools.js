@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import { School } from '../models/school.js';
 import auth from '../middleware/auth.js';
 
-
 const router = new express.Router();
 
 router.post("/schools", async (req, res) => {
@@ -13,7 +12,6 @@ router.post("/schools", async (req, res) => {
         await school.save()
         res.send({school,token})
     } catch (e) {
-        console.log(e)
         if (e.name === 'ValidationError') {
             const error = {};
             Object.keys(e.errors).forEach((key) => {

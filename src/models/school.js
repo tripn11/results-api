@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import {codeGenerator} from '../middleware/codeGenerator.js';
+import codeGenerator from '../middleware/codeGenerator.js';
 
 const schoolSchema = new mongoose.Schema({
     name: {
@@ -174,8 +174,9 @@ schoolSchema.pre('save', async function (next) {
             })
             this.classes[section].classes=classes;
         })
-        
-    }if(this.isNew || this.isModified('password')) {
+    }
+    
+    if(this.isNew || this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)
     }
     next();

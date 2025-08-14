@@ -26,4 +26,4 @@ const codeGenerator = (length) => {
     return code.join('');
 }
 
-export {codeGenerator};
+export default codeGenerator;
