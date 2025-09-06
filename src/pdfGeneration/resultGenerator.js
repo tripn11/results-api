@@ -1,7 +1,7 @@
 import launchBrowser from './launchBrowser.js';
 import detailsCompiler from './details.js';
 import pageCreator from './pageCreator.js';
-import pageEval from './bloomfields/pageEval.js';
+import pageEval from './testing/pageEval.js';
 
 const pdfGenerator = async (results,type) => {
     try {
@@ -13,8 +13,6 @@ const pdfGenerator = async (results,type) => {
             const page = await pageCreator(browser, details.schoolName)
             await pageEval(page,result,details,type)
             const finalResult = await page.pdf({
-            // await page.pdf({
-            //     path:details.student.name.firstName+'.pdf',
                 format: 'A4',
                 printBackground: false
             });

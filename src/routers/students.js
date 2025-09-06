@@ -35,19 +35,27 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
         const isAdminReady = grading && sectionSubjects && currentTerm && currentSession
 
         const page = req.query.page;
-        const students = await Student.getStudentsInClass(req.school._id,req.class,page)
-        if(!students) {
+        const response = await Student.getStudentsInClass(req.school._id,req.class,page)
+        
+        if(!response.students) {
             throw new Error('No students found')
         }
 
         if(isAdminReady) {
-            const results = await Promise.all(students.map(async(student)=>{
+            const results = await Promise.all(response.students.map(async(student)=>{
                 const studentResult = await student.getTermResult(req.school,req.section,req.teachersName)
                 return studentResult;
             }))
-            res.send({students,results})
-        }else {
-            throw new Error ("Admin must set the grading,subjects, and term info")
+            res.send({
+                students: response.students.map(student => student.toJSON({ virtuals: true })),
+                results,
+                teachersTitle: req.teachersTitle,
+                teachersName: req.teachersName,
+                teachersClass: req.class,
+                totalStudentsInClass: response.total
+            })
+        } else {
+            throw new Error ("Admin must set the grading, subjects, and term info")
         }
     }catch(e) {
         res.send(e.message)
@@ -89,10 +97,19 @@ router.delete('/students/:id', auth, async(req,res) => {
 router.post('/students/promote', auth, async (req, res) => {
     try {
         await Student.promoteStudents(req.school);
-        res.send({ message: 'All students have been promoted successfully.' });
+        res.send({ message: 'All students have been promoted successfully' });
     } catch (e) {
         res.status(500).send({ error: e.message });
     }
 });
+
+router.post('/students/resetCodes', auth, async (req, res) => {
+    try {
+        await Student.resetCodes(req.school._id);
+        res.send({ message: 'All student codes have been reset successfully.' });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+})
 
 export default router;

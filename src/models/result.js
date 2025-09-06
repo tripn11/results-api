@@ -7,6 +7,8 @@ const resultSchema = new mongoose.Schema({
         required:true
     },
     attendance: Number,
+    population:Number,
+    age:Number,
     caAverage:Number,
     caTotal:Number,
     average:Number,
@@ -26,11 +28,17 @@ const resultSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    subjects:{
-        type:Map,
-        of:Object,
-        required:true,
-        _id:false
+    subjects: {
+        type: Object,   
+        required: true,
+        _id: false,
+        default: {},
+        validate: {
+            validator: function(v) {
+                return Object.values(v).every(val => val && typeof val === 'object' && !Array.isArray(val));
+            },
+            message: 'Each subject must be an object'
+        }
     }
 })
 

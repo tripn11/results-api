@@ -1,5 +1,6 @@
 export default async (page, result, details, type) => {
   return await page.evaluate(({ result, details, type }) => {
+
     const title = type === 'ca' ? 'continuous assessment result' : 'end of term report';
     const tableHeadRow = document.querySelector('thead tr');
     const tableHead = document.querySelector('thead');
@@ -7,12 +8,12 @@ export default async (page, result, details, type) => {
     const section = Object.keys(details.school.classes)
       .find(section => details.school.classes[section].classes
       .some(c => c.class === details.student.class));
-    const grading = details.school.classes[section].grading.map(each => each.split("-")[0]);
-    const gradingScore = details.school.classes[section].grading.map(each => each.split("-")[1]);
+    const grading = details.school.classes[section].grading;
     const row1 = document.createElement('tr');
     const th = document.createElement('th');
     const subjects = details.school.classes[section].subjects;
-
+    const caScores = grading.map(score=>Number(score.split('-')[1]))
+    const totalCa = caScores.reduce((total,score)=>total + score,0)
 
     //result details
     document.getElementById('school-name').innerText = details.school.name;
@@ -22,13 +23,14 @@ export default async (page, result, details, type) => {
     document.getElementById('title').innerText = title;
     document.querySelector('#session span').innerText = result.session;
     document.querySelector('#term span').innerText = result.term;
-    document.querySelector('#name span').innerText = details.fullName;
-    document.querySelector('#age span').innerText = details.age;
+    document.querySelector('#name span').innerText = details.student.fullName;
+    document.querySelector('#age span').innerText = result.age;
     document.querySelector('#sex span').innerText = details.student.sex;
-    document.querySelector('#class span').innerText = details.student.class;
-    document.querySelector('#classPop span').innerText = details.totalStudentsInClass;
+    document.querySelector('#class span').innerText = result.className;
+    document.querySelector('#classPop span').innerText = result.population;
     document.querySelector('#average span').innerText = result.average;
     document.querySelector('#teachers-comment span').innerText = result.teachersComment;
+    document.querySelector('#principals-comment span').innerText = result.principalsComment;
     document.querySelector('#teachers-name span').innerText = result.teachersName;
   
 
@@ -37,9 +39,6 @@ export default async (page, result, details, type) => {
       const customData = document.createElement('th');
       const customData1 = document.createElement('th');
       const customData2 = document.createElement('th');
-      const caScores = gradingScore.slice(0,-1)
-      const caScoresNum = caScores.map(score=>Number(score))
-      const totalCa = caScoresNum.reduce((total,score)=>total + score)
       const totalRow = document.createElement('tr');
       const averageRow = document.createElement('tr');
 
@@ -48,7 +47,7 @@ export default async (page, result, details, type) => {
       grading.forEach((each,i)=>{
         if(i<grading.length-1) {
           const newData = document.createElement('th');
-          newData.innerText = each;
+          newData.innerText = each.split('-')[0];
           tableHeadRow.appendChild(newData);
         }
       })
@@ -60,12 +59,12 @@ export default async (page, result, details, type) => {
 
       //grading heading
       row1.appendChild(th)
-      gradingScore.forEach((score,i) => {
+      grading.forEach((grade,i) => {
         const data = document.createElement('th');
-        if(i<gradingScore.length-1){
-          data.innerText = score + '%';
+        if(i<grading.length-1){
+          data.innerText = grade.split('-')[1] + '%';
           row1.appendChild(data)
-        }else if(i===gradingScore.length-1){
+        }else if(i===grading.length){
           data.innerText = totalCa+'%';
           row1.appendChild(data)
         }
@@ -82,7 +81,7 @@ export default async (page, result, details, type) => {
         grading.forEach((_, i) => {
           const data = document.createElement('td');
           if (i === 0) {
-            data.innerText = subject;
+            data.innerText = subject.split('-')[0];
           } else {
             const subjectData = result.subjects[subject];
             const field = grading[i - 1];
@@ -130,10 +129,10 @@ export default async (page, result, details, type) => {
         let score;
         switch(i) {
           case 0: 
-            score = 100 - Number(gradingScore[gradingScore.length-1])
+            score = totalCa
             break
           case 1:
-            score = gradingScore[gradingScore.length-1]
+            score = 100-totalCa
             break
           case 2:
             score = 100
@@ -152,16 +151,18 @@ export default async (page, result, details, type) => {
           const data = document.createElement('td')
           switch(i) {
             case 1:
-              data.innerText = subject;
+              data.innerText = subject.split('-')[0];
               break;
             case 2:
-              data.innerText = result.subjects[subject].caTotal
+              data.innerText = Object.values(result.subjects[subject])
+              .slice(0,-1).reduce((total,score)=>total + Number(score),0)
               break
             case 3:
-              data.innerText = result.subjects[subject].exam
+              data.innerText = result.subjects[subject][grading[grading.length-1]]
               break
             case 4:
-              data.innerText = result.subjects[subject].total
+              data.innerText = Object.values(result.subjects[subject])
+              .reduce((total,score)=>total + Number(score),0)
               break
             case 5:
               data.innerText = result.subjects[subject].classAverage

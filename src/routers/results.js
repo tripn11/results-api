@@ -26,11 +26,12 @@ router.put('/updateResult/:id',teacherAuth, async(req,res) => {
     }
 })
 
-router.post('/finalResult', auth ,async(req,res) => {
+router.get('/schoolResult', auth , async(req,res) => {
     try{
-        let results = []
-        if(req.body.studentName!==''){
-            const [surName, firstName] = req.body.studentName.split(" ")
+        const details = req.query;
+        let results = [];
+        if(details.studentName!=='') {
+            const [surName, firstName] = details.studentName.split(" ")
             const student = await Student.findOne({
                 "name.firstName":firstName,
                 "name.surName":surName
@@ -40,15 +41,15 @@ router.post('/finalResult', auth ,async(req,res) => {
             }
             const result = await Result.findOne({
                 owner:student._id,
-                session:req.body.session,
-                term:req.body.term,
-                className:req.body.className
+                session:details.session,
+                term:details.term,
+                className:details.className
             })
             if(!result) {
                 throw new Error("Result not found")
             }
             results.push(result)            
-        }else {
+        } else {
             const classResult = await Result.find({
                 session:req.body.session,
                 term:req.body.term,
@@ -67,4 +68,24 @@ router.post('/finalResult', auth ,async(req,res) => {
     }
 })
 
-export default router
+router.get('/classResult', teacherAuth , async (req, res) => {
+    try {
+        const details = req.query;
+        const result = await Result.findOne({
+            owner:details._id,
+            session:details.session,
+            term:details.term,
+            className:details.className,
+        })
+
+        if(!result) {
+            throw new Error("Result not found")
+        }
+        const finalResults = await pdfGenerator([result],details.type)
+        res.json(finalResults)
+    }catch (e) {
+        res.status(400).send(e.message)
+    }
+})
+
+export default router;

@@ -60,8 +60,9 @@ router.post("/schools/logout", auth, async (req, res) =>{
     }
 })
 
-router.post("/schools/logoutAll", auth, (req,res)=>{
+router.post("/schools/logoutAll", auth, async (req,res)=>{
     req.school.tokens=[]
+    await req.school.save();
     res.send(req.school.name+' has sucessfully logged out on all devices')
 })
 

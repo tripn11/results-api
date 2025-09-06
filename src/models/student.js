@@ -46,7 +46,7 @@ const studentSchema = new mongoose.Schema({
         required:true,
         ref:"School"
     }
-})
+},{ timestamps:true })
 
 studentSchema.pre('save', async function (next) {
     if(this.isNew) {
@@ -84,27 +84,27 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
     const sectionSubjects = school.classes[section].subjects;
     const currentTerm = school.termInfo.currentTerm
     const currentSession = school.termInfo.currentSession
-   
+
     const grade = {}
     const subjects = {}
 
 
-
-    const result = await this.populate({
+    await this.populate({
         path:'results',
         match:{
             session:currentSession,
             term:currentTerm
         }
     })
-    
-    if(result.length>0) {
-        return result
+
+    if(this.results.length>0) {
+        return this.results[0]
     }else{
         grading.forEach(each=>{
-            const[area,score]= each.split('-')
-            grade[area]=score
+            grade[each]=each.split('-')[1]
         })
+        const examGrade = 100 - Object.values(grade).reduce((total,val)=> total + Number(val),0)
+        grade[`exam-${examGrade}`] = examGrade;
 
         sectionSubjects.forEach(each=>{
             subjects[each]=grade
@@ -114,6 +114,7 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
             owner:this._id,
             session:currentSession,
             term:currentTerm,
+            className:this.class,
             teachersName,
             subjects
         }
@@ -128,14 +129,16 @@ studentSchema.methods.totalStudentsInClass = async function () {
 }
 
 
-studentSchema.statics.getStudentsInClass = async (schoolId,level,page=1) => {
-    let skip = (page-1) * 10
-    const students = await Student.find({school:schoolId,class:level})
-    .sort({"name.surName":1})
-    .limit(10)
-    .skip(skip)
-    
-    return students
+studentSchema.statics.getStudentsInClass = async (schoolId, level, page = 1) => {
+    let skip = (page - 1) * 10;
+    const students = await Student.find({ school: schoolId, class: level })
+        .sort({ "name.surName": 1 })
+        .limit(20)
+        .skip(skip);
+
+    const total = await Student.countDocuments({ school: schoolId, class: level });
+
+    return { students, total };
 }
 
 studentSchema.statics.totalStudentsInSchool = async (schoolId) => {
@@ -167,6 +170,14 @@ studentSchema.statics.promoteStudents = async school => {
             await student.save()
         }
     }))
+}
+
+studentSchema.statics.resetCodes = async (schoolId) => {
+    const students = await Student.find({ school: schoolId });
+    await Promise.all(students.map(async (student) => {
+        student.code = codeGenerator(7);
+        await student.save();
+    }));
 }
 
 export const Student = mongoose.model('Student', studentSchema)

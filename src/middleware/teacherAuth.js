@@ -1,15 +1,8 @@
-import jwt from 'jsonwebtoken';
 import { School } from "../models/school.js";
 
 const teacherAuth = async (req,res,next) =>{
     try{
-        let  teachersCode = jwt.verify(req.header('teacherAuth'), process.env.JWT_SECRET_CODE)
-
-        if(!teachersCode) {
-            throw new Error('Please get Authorised first')
-        }
-    
-        teachersCode = teachersCode.code
+        let teachersCode = req.header('Authorization').replace("Bearer ",'');   
 
         const [code,teachersClass] = teachersCode.split("-")
 
@@ -23,22 +16,24 @@ const teacherAuth = async (req,res,next) =>{
         })
     
         if(!school) {
-            throw new Error ('No school found')
+            throw new Error ('Invalid Authorization Code')
         }
 
         const section = Object.keys(school.classes)
         .find(section => school.classes[section].classes
         .some(c=>c.code===code && c.class===teachersClass))
 
-        const teachersName = school.classes[section].classes
-        .filter(clas => clas.class === teachersClass)
-        .teachersName
+        const classObj = school.classes[section].classes
+        .find(clas => clas.class === teachersClass);
 
- 
+        const teachersName = classObj ? classObj.teachersName : undefined;
+        const teachersTitle = classObj ? classObj.teachersTitle : undefined;
+
         req.school = school;
         req.section = section;
         req.class = teachersClass;
         req.teachersName = teachersName;
+        req.teachersTitle = teachersTitle;
         next()
 
     }catch (e) {
