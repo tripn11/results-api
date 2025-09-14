@@ -1,49 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result</title>
-</head>
-<body>
-    <div class="header">
-        <!-- <img src="" alt="School Logo"> -->
-        <div id="school-name"></div>
-        <div id="school-address"></div>
-        <div id="contact"></div>
-        <div id="email"></div>
-        <div id="title"></div>
-        <div id="session"><span></span>&nbsp;ACADEMIC SESSION</div>
-        <div id="term"><span></span>&nbsp;TERM</div>
-    </div>
-    <div class="info">
-        <div id="name">Name:&nbsp;<span></span></div>
-        <div id="age">Age:&nbsp;<span></span></div>
-        <div id="sex">Sex:&nbsp;<span></span></div>
-        <div id="class">Class:&nbsp;<span></span></div>
-        <div id="admission">Admission No:&nbsp;______</div>
-        <div id="classPop">No in class:&nbsp;<span></span></div>
-        <div id="average">Overall Percentage:&nbsp;<span></span></div>
-        <div id="class-average">Class Average:&nbsp<span></span></div>
-        <div id="no-of-subjects">No of Subjects Recorded:&nbsp<span></span></div>
-    </div>
-    <table>
-        <span id="table-title"></span>
-        <thead>
-            <tr>
-                <th>Subjects</th>
-            </tr>
-        </thead>
-        <tbody id="results-table">
-            <!-- Results will be dynamically inserted here -->
-        </tbody>
-    </table>
-    <footer>
-        <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
-        <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
-        <div id="teachers-signature">Sign: ________</div>
-        <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
-        <div id="head-teachers-signature">Sign: ________</div>
-    </footer>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Result</title>
+    </head>
+    <body>
+        <div class="header">
+            <!-- <img src="" alt="School Logo"> -->
+            <div id="school-name"></div>
+            <div id="school-address"></div>
+            <div id="contact"></div>
+            <div id="email"></div>
+            <div id="title">End of Term Report</div>
+            <div id="session"><span></span>&nbsp; SESSION</div>
+            <div id="term"><span></span>&nbsp;TERM</div>
+        </div>
+        <div class="info">
+            <div id="name">Name:&nbsp;<span></span></div>
+            <div id="age">Age:&nbsp;<span></span></div>
+            <div id="sex">Sex:&nbsp;<span></span></div>
+            <div id="class">Class:&nbsp;<span></span></div>
+            <div id="admission-no">Admission No:&nbsp;<span></span></div>
+            <div id="classPop">No in class:&nbsp;<span></span></div>
+            <div id="average">Overall Percentage:&nbsp;<span></span></div>
+            <div id="class-average">Class Average:&nbsp;<span></span></div>
+            <div id="subjects-recorded">Number of Subjects Recorded:&nbsp;<span></span></div>
+        </div>
+
+        <table id="attendance-record">
+            <thead>
+                <tr>
+                    <th>ATTENDANCE RECORD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>TIMES SCHOOL OPENED</td><td><!--will be inserted--></td></tr>
+                <tr><td>TIMES PRESENT</td><td><!--will be inserted--></td></tr>
+                <tr><td>TIMES ABSENT</td><td><!--will be inserted--></td></tr>
+                <tr><td>TIMES LATE</td><td></td></tr>
+            </tbody>
+        </table>
+
+        <table id="health-record">
+            <thead>
+                <tr>
+                    <th>HEALTH RECORD</th>
+                </tr>
+                <tr>
+                    <th>WEIGHT(KG)</th>
+                    <th>HEIGHT(M)</th>
+                    <th>GENERAL HEALTH</th>
+                </tr>
+                <tr><th></th><th></th><th></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="weight"></td>
+                    <td id="height"></td>
+                    <td id="general-health"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="observations">
+            <thead><tr><th>OBSERVATIONS ON CONDUCT</th><th>RATINGS</th></tr></thead>
+            <tbody>
+                <tr><td>HANDWRITING</td><td></td></tr>
+                <tr><td>VERBAL FLUENCY</td><td></td></tr>
+                <tr><td>GAMES, SPORTS</td><td></td></tr>
+                <tr><td>HANDLING OF TOOLS</td><td></td></tr>
+                <tr><td>DRAWING, PAINTING AND CRAFTS</td><td></td></tr>
+                <tr><td>MUSICAL SKILLS</td><td></td></tr>
+                <tr><td>PUNCTUALITY</td><td></td></tr>
+                <tr><td>CREATIVITY</td><td></td></tr>
+                <tr><td>RELIABILITY</td><td></td></tr>
+                <tr><td>NEATNESS</td><td></td></tr>
+                <tr><td>POLITENESS</td><td></td></tr>
+                <tr><td>HONESTY</td><td></td></tr>
+                <tr><td>RELATIONSHIP WITH TEACHER</td><td></td></tr>
+                <tr><td>RELATIONSHIP WITH OUR PUPILS</td><td></td></tr>
+                <tr><td>SELF CONTROL</td><td></td></tr>
+                <tr><td>PROMPTNESS TO COMPLETE WORK</td><td></td></tr>
+                <tr><td>ORGANIZATIONAL ABILITY</td><td></td></tr>
+                <tr><td>PERSEVERANCE</td><td></td></tr>
+                <tr><td>CLASS WORK</td><td></td></tr>
+                <tr><td>HOME WORK</td><td></td></tr>
+                <tr><td>PROJECT</td><td></td></tr>
+                <tr><td>NOTE TAKING</td><td></td></tr>
+                <tr><td>READING</td><td></td></tr>
+                <tr><td>EXCURSION</td><td></td></tr>
+                <tr><td>PRACTICAL</td><td></td></tr>
+                <tr><td>ATITTUDE DURING LESSON</td><td></td></tr>
+                <tr><td>ARRIVAL IN SCHOOL</td><td></td></tr>
+            </tbody>
+        </table>
+
+        <table id="result">
+            <thead>
+                <tr>ACADEMIC REPORT</tr>
+                <tr>
+                    <th>Subjects</th>
+                    <th>CA</th>
+                    <th>EXAM</th>
+                    <th>TOTAL</th>
+                    <th rowspan="2">CLASS AVERAGE</th>
+                    <th>GRADE</th>
+                    <th>REMARK</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <!-- grade scales will be inserted here-->
+                </tr>
+            </thead>
+            
+            <tbody >
+                <!-- Results will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+       <table id="rating-key">
+            <thead><tr><th>RATING KEY</th></tr></thead>
+            <tbody>
+                <tr><td>5. Maintains an excellence degree of observed trait</td></tr>
+                <tr><td>4. Maintains a high level of observed trait</td></tr>
+                <tr><td>3. Maintains acceptable level</td></tr>
+                <tr><td>2. Shows minimal regard for trait</td></tr>
+                <tr><td>1. Has no regard for observed trait</td></tr>
+            </tbody>
+       </table>
+
+       <table id="overall-remark">
+            <tbody><tr><td>OVERALL REMARK</td><td></td></tr></tbody>
+       </table>
+
+       <table id="grade-key">
+            <tbody>
+                <tr>
+                    <td rowspan="3">GRADE KEYS</td>
+                    <td>80 - 100</td>
+                    <td>70 - 79</td>
+                    <td>60 - 69</td>
+                    <td>50 - 59</td>
+                    <td>40 - 49</td>
+                    <td>0 - 39</td>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>B</td>
+                    <td>C</td>
+                    <td>D</td>
+                    <td>E</td>
+                    <td>F</td>
+                </tr>
+                <tr>
+                    <td>DISTINCTION</td>
+                    <td>EXCELLENT</td>
+                    <td>VERY GOOD</td>
+                    <td>GOOD</td>
+                    <td>WORKING ON SKILLS</td>
+                    <td>WORKING ON SKILLS</td>
+                </tr>
+            </tbody>
+       </table>
+
+        <footer>
+            <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
+            <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
+            <div id="teachers-signature">Sign: ________</div>
+            <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
+            <div id="head-teachers-signature">Sign: ________</div>
+        </footer>
+    </body>
 </html>

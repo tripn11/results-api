@@ -6,13 +6,15 @@ const resultSchema = new mongoose.Schema({
         ref:'Student',
         required:true
     },
+    school: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'School',
+        required:true
+    },
     attendance: Number,
+    timesSchoolOpened:Number,
     population:Number,
     age:Number,
-    caAverage:Number,
-    caTotal:Number,
-    average:Number,
-    total:Number,
     teachersName:String,
     teachersComment:String,
     principalsComment:String,
@@ -41,5 +43,11 @@ const resultSchema = new mongoose.Schema({
         }
     }
 })
+
+resultSchema.pre('save', async function (next) {
+    await this.populate("school")
+    this.timesSchoolOpened = this.school.termInfo.totalTimesSchoolOpened;
+    next();
+});
 
 export const Result = mongoose.model('Result', resultSchema)

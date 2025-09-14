@@ -69,7 +69,7 @@ studentSchema.virtual('age').get(function () {
 })
 
 studentSchema.virtual('fullName').get(function () {
-    const othername = this.name.otherName?this.name.otherName:'';
+   const othername = this.name.otherName?this.name.otherName:'';
     return this.name.surName+' '+this.name.firstName+' '+othername
 })
 
@@ -112,6 +112,7 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
 
         const initialResult = {
             owner:this._id,
+            school:this.school,
             session:currentSession,
             term:currentTerm,
             className:this.class,

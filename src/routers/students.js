@@ -1,6 +1,7 @@
 import express from 'express';
 import auth from '../middleware/auth.js'
 import teacherAuth from '../middleware/teacherAuth.js';
+import studentAuth from '../middleware/studentAuth.js';
 import { Student } from "../models/student.js";
 
 const router = new express.Router()
@@ -69,6 +70,24 @@ router.get('/students/totalNumber',auth, async(req,res) => {
     } catch (e) {
         res.send(e.message)
     }   
+})
+
+router.get('/student', studentAuth, async(req, res) => {
+    try{
+        await req.student.populate('school');
+        const classes = Object.values(req.student.school.classes)
+                        .flatMap(section => section.classes.map(c => c.class));
+                        
+        const details = {
+            fullName: req.student.fullName, 
+            class:req.student.class, 
+            term: req.student.school.termInfo.currentTerm,
+            classes
+        }
+        res.send(details)
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
 })
 
 router.patch('/students/:id', auth, async(req,res) =>{
