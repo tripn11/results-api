@@ -2,7 +2,8 @@ import launchBrowser from './launchBrowser.js';
 import detailsCompiler from './details.js';
 import pageCreator from './pageCreator.js';
 import pageEval from './testing/pageEval.js';
-import { Result } from "../models/resultModel.js";
+import styler from './styler.js';
+import { Result } from "../models/result.js";
 
 
 const resultGenerator = async (results,type) => {
@@ -21,9 +22,10 @@ const resultGenerator = async (results,type) => {
             const details = await detailsCompiler(result, classResults)
             const page = await pageCreator(browser, details.schoolName, type)
             await pageEval(page,result,details,type)
+            await styler(page, details.schoolName, type)
             const finalResult = await page.pdf({
                 format: 'A4',
-                printBackground: false
+                printBackground: true,
             });
             pdfResults.push({name:details.student.name.firstName+'.pdf',file:finalResult})
         }))

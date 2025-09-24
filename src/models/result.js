@@ -16,6 +16,7 @@ const resultSchema = new mongoose.Schema({
     population:Number,
     age:Number,
     teachersName:String,
+    teachersTitle:String,
     teachersComment:String,
     principalsComment:String,
     className: {

@@ -1,0 +1,194 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  padding: 2rem 4rem;
+}
+
+.header {
+  display: flex;
+  margin-bottom: 2rem;
+  
+    img {
+      width: 100%;
+    }
+
+    > div:first-child {
+        flex: 1.2;
+    }
+
+    > div:last-child {
+        flex: 4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: bold;
+
+        > div {
+          font-family: 'Times New Roman', Times, serif;
+        }
+        
+        #term {
+          text-transform: uppercase;
+        }
+
+        #school-name {
+            color: rgb(0, 0, 78);
+            font-weight: 900;
+            font-size: 1.6rem;
+            font-family:Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+        }
+
+        #title,#session,#term {
+            font-size: 1.2rem;
+            
+        }
+
+        #school-address {
+          text-transform: capitalize;
+        }
+    }
+}
+
+.info {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+
+
+  > div {
+    flex:0 0 25%;
+    font-weight: bold;
+  }
+
+  > div:first-child {
+    flex:0 0 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  span {
+    font-weight: normal;
+    padding: 0 0.5rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+    text-decoration-thickness: 0.05rem;
+    text-transform: uppercase;
+  }
+
+  #name span {
+    font-weight: bold;
+    text-decoration: none;
+    text-transform:uppercase;
+  }
+}
+
+
+#result {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.7rem;
+  table-layout: fixed;
+
+ 
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 0.3rem;
+    text-align: center; 
+    overflow-wrap: break-word;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+    width:27%;
+    text-transform: uppercase;
+  }
+
+  th:last-child,
+  td:last-child,
+  th:nth-last-child(2),
+  td:nth-last-child(2) {
+    width:13%;
+  }
+
+
+  thead {
+    font-weight: bold;
+    font-size: 0.75rem;
+
+    tr:first-child {
+        text-transform: uppercase;
+    }
+
+    tr:last-child {
+      background-color: rgb(187, 186, 186);
+
+      th {
+        font-weight: bold;
+      }
+
+      th:first-child,
+      th:nth-last-child(2),
+      th:last-child {
+        background-color: white;
+      }
+    }
+  }
+
+  tbody {
+    tr:last-child,
+    tr:nth-last-child(2) {
+      font-weight: bold;
+
+      td {
+        text-align: right;
+      }
+    }
+
+    td:nth-last-child(3) {
+      font-weight: bold;
+    }
+  }
+}
+
+footer {
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  bottom: 2rem;
+
+  > div {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border: 3px solid  rgb(0, 0, 78);
+    font-weight: bold;
+    line-height: 2rem;
+    height: 8rem;
+
+    > div:first-child span {
+        font-weight: normal;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    #teachers-name span {
+        text-decoration: none;
+        font-weight: normal;
+    }
+  }
+}

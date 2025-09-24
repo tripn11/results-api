@@ -1,13 +1,16 @@
-import { subjectPosition, classAverage, subjectClassAverage } from "../details";
+import { subjectPosition, classAverage, subjectClassAverage } from "../details.js";
 import ordinal from "ordinal";
 
 export default async (page, result, details, type) => {
-  return await page.evaluate(({ result, details, type }) => {
-    const byId = (id,text) => {
-      const element = document.getElementById(id);
-      if (element&&text!==undefined) element.innerText = text;
-      return element;
-    };
+  const actualClassAverage = classAverage(details.classResults);
+  const actualSubjectClassAverage = subjectClassAverage(result, details.classResults);
+  const actualSubjectPosition = subjectPosition(result, details.classResults);
+  Object.keys(actualSubjectPosition).forEach(subject => {
+    actualSubjectPosition[subject] = ordinal(actualSubjectPosition[subject].findIndex(res=>res._id.equals(result._id))+1);
+  })
+  const studentName = details.student.fullName; //for some reason, its not seen inside page.eval
+ 
+  return await page.evaluate(({ result, details, type, actualSubjectPosition, actualClassAverage, actualSubjectClassAverage, studentName }) => {
     const byQuery = (selector,text) => {
       const element = document.querySelector(selector);
       if (element&&text!==undefined) element.innerText = text;
@@ -28,41 +31,42 @@ export default async (page, result, details, type) => {
     const average = total/subjects.length
 
     //result details
-    byId('school-name',details.school.name);
-    byId('school-address',details.school.address);
-    byId('contact',details.school.phoneNumber);
-    byId('email',details.school.email);
+    byQuery('#school-name',details.school.name);
+    byQuery('#school-address',details.school.address);
+    byQuery('#contact span',details.school.phoneNumber);
+    byQuery('#email span',details.school.email);
     byQuery('#session span',result.session);
     byQuery('#term span',result.term);
-    byQuery('#name span',details.student.fullName);
+    byQuery('#name span', studentName);
     byQuery('#age span',result.age);
     byQuery('#sex span',details.student.sex);
     byQuery('#class span',result.className);
     byQuery('#classPop span',result.population);
     byQuery('#average span',average);
-    byQuery('#class-average span',classAverage(details.classResults));
+    byQuery('#class-average span',actualClassAverage);
     byQuery('#subjects-recorded span',subjects.length);
     byQuery('#teachers-comment span',result.teachersComment);
     byQuery('#principals-comment span',result.principalsComment);
-    byQuery('#teachers-name span',result.teachersName);
+    byQuery('#teachers-name span',result.teachersTitle+ ' '+result.teachersName);
 
     if(type==='ca'){
       //grading heading
       grading.forEach((each,i)=>{
-        if(i < grading.length) {
+        if(i < grading.length-1) {
           const row = byQuery("thead tr:first-child");
-          const newData = createElement('th', each.split('-')[0]).toUpperCase();
+          const newData = createElement('th', each.split('-')[0].toUpperCase());
           row.insertBefore(newData, row.querySelector("th:nth-last-child(3)"));
         }
       })
 
       //scale heading
       const scaleRow = byQuery("thead tr:last-child");
-      grading.forEach(grade => {
+      grading.forEach((grade, index) => {
+        if(index === grading.length -1) return;
         const scale = createElement('th', grade.split('-')[1] + '%');
-        scaleRow.appendChild(scale);
+        scaleRow.insertBefore(scale, scaleRow.querySelector('th:nth-last-child(2)'));
       });
-      scaleRow.appendChild(createElement('th', caScale + '%'));
+      scaleRow.insertBefore(createElement('th', caScale + '%'), scaleRow.querySelector('th:nth-last-child(2)'));
 
 
       //actual result
@@ -70,18 +74,18 @@ export default async (page, result, details, type) => {
         const row = createElement('tr');
         const remark = () => {
           const score = details.totals[subject].ca;
-          if(score>=80) return 'DISTINCTION'
-          if(score>=70) return 'EXCELLENT'
-          if(score>=60) return 'VERY GOOD'
-          if(score>=50) return 'GOOD'
-          return 'WORKING ON SKILLS'
+          if(score>=35) return 'DISTINCTION'
+          if(score>=30) return 'EXCELLENT'
+          if(score>=25) return 'V. GOOD'
+          if(score>=20) return 'GOOD'
+          return 'W.O.S'
         }
-        row.appendChild(createElement('td', subject.split('-')[0]).toUpperCase());
+        row.appendChild(createElement('td', subject.split('-')[0].toUpperCase()));
         grading.slice(0,-1).forEach(grade => { 
           row.appendChild(createElement('td', result.subjects[subject][grade]));
         });
         row.appendChild(createElement('td', details.totals[subject].ca))
-        row.appendChild(createElement('td', ordinal(subjectPosition(result, details.classResults)[subject].indexOf(result)+1)))
+        row.appendChild(createElement('td', actualSubjectPosition[subject]))
         row.appendChild(createElement('td', remark()));
         byQuery('tbody').insertBefore(row, byQuery('tbody tr:nth-last-child(2)'))
       });
@@ -91,27 +95,45 @@ export default async (page, result, details, type) => {
     
     }else if (type==='term') {
       //attendance record 
-      byQuery('#attendance-record tbody tr:first-child td:last-child', result.timesSchoolOpened);
-      byQuery('#attendance-record tbody tr:nth-child(2) td:last-child', result.attendance);
+      byQuery('#attendance-record tbody tr:first-child td:last-child', result.timesSchoolOpened || 0);
+      byQuery('#attendance-record tbody tr:nth-child(2) td:last-child', result.attendance || 0);
       byQuery('#attendance-record tbody tr:nth-child(3) td:last-child', result.timesSchoolOpened - result.attendance);
 
       //result
-      byQuery('#result thead tr:last-child').appendChild(createElement('th', caScale))
-      byQuery('#result thead tr:last-child').appendChild(createElement('th', (100-caScale)))
-      byQuery('#result thead tr:last-child').appendChild(createElement('th', 100))
+      const scaleRow = byQuery('#result thead tr:last-child');
+      const lastChild = scaleRow.querySelector("th:last-child");
+      scaleRow.insertBefore(createElement('th', caScale), lastChild)
+      scaleRow.insertBefore(createElement('th', (100-caScale)), lastChild)
+      scaleRow.insertBefore(createElement('th', 100), lastChild)
 
       //actual results
       subjects.forEach(subject => {
         const row = createElement('tr');
-        row.appendChild(createElement('td', subject.split('-')[0]).toUpperCase());
+        const evaluation = score => {
+          if(score>=80) return {grade:'A', remark:'DISTINCTION'}
+          if(score>=70) return {grade:'B', remark:'EXCELLENT'}
+          if(score>=60) return {grade:'C', remark:'V. GOOD'}
+          if(score>=50) return {grade:'D', remark:'GOOD'}
+          if(score>=40) return {grade:'E', remark:'W.O.S'}
+          return {grade:'F', remark:'W.O.S'}
+        }
+        const {grade, remark} = evaluation(details.totals[subject].total);
+        row.appendChild(createElement('td', subject.split('-')[0].toUpperCase()));
         row.appendChild(createElement('td', details.totals[subject].ca));
         row.appendChild(createElement('td', result.subjects[subject][grading.at(-1)]));
         row.appendChild(createElement('td', details.totals[subject].total));
-        row.appendChild(createElement('td', subjectClassAverage(result, details.classResults)[subject]))
+        row.appendChild(createElement('td', actualSubjectClassAverage[subject]))
+        row.appendChild(createElement('td', grade));
+        row.appendChild(createElement('td', remark));
+        byQuery('#result tbody').appendChild(row);
       })
-      
-      
- 
+      const row = createElement('tr');
+      row.appendChild(createElement('td'));
+      const cellTotal = createElement('td', 'TOTAL');
+      cellTotal.colSpan=2;
+      row.appendChild(cellTotal)
+      row.appendChild(createElement('td', Object.values(details.totals).reduce((total,each)=>total + each.total,0)))
+      byQuery('#result tbody').appendChild(row);
     }
-  )
+  }, { result, details, type, actualSubjectPosition, actualClassAverage, actualSubjectClassAverage, studentName });
 }

@@ -54,11 +54,10 @@ export const classAverage = results => {
             .filter(sub=> !Object.values(result.subjects[sub]).includes('-'));
         const studentTotal = subjects.reduce((studentTotal,subject) => {
             const subjectTotal = Object.values(result.subjects[subject])
-                .map(each=>Number(each))
-                .reduce((total,val) => total+val,0)
+                .reduce((total,val) => total+Number(val),0)
             return studentTotal + subjectTotal
         },0)
-        return total + studentTotal
+        return total + studentTotal/subjects.length
     },0)
     return (total / results.length).toFixed(1);
 }
@@ -68,13 +67,13 @@ export const subjectClassAverage = (result, results) => {
     const subjectAverage = {};
     const subjects = Object.keys(result.subjects)
             .filter(sub=> !Object.values(result.subjects[sub]).includes('-'));
+
     subjects.forEach(subject => {
         const subjectTotal = results.reduce((total, result) => {
             const individualTotal = Object.values(result.subjects[subject])
-                .map(each => Number(each))
-                .reduce((total, val) => total + val, 0);
+                .reduce((total, val) => total + Number(val), 0);
             return total + individualTotal
-        })
+        }, 0)
         subjectAverage[subject] = (subjectTotal / results.length).toFixed(1);
     })
     return subjectAverage;

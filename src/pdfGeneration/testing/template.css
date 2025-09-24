@@ -1,0 +1,314 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-size: 14px;
+}
+
+.a4 {
+    width:210mm;
+    height:297mm;
+    border:1px solid black;
+}
+
+body {
+  padding: 2rem 4rem;
+}
+
+.header {
+  display: flex;
+  margin-bottom: 1rem;
+
+  img {
+    width: 100%;
+  }
+
+  > div:first-child {
+    flex: 1.2;
+  }
+
+  > div:last-child {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+
+    > div {
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    #term {
+      text-transform: uppercase;
+    }
+
+    #school-name {
+      color: rgb(0, 0, 78);
+      font-weight: 900;
+      font-size: 1.6rem;
+      font-family:Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+    }
+
+    #title,#session,#term {
+      font-size: 1.2rem;
+    }
+
+    #school-address {
+      text-transform: capitalize;
+    }
+  }
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+
+  > div {
+    flex:0 0 33%;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  > div:first-child {
+    flex:0 0 100%;
+  }
+
+  >div:last-child {
+    flex: 1
+  }
+
+  span {
+    font-weight: normal;
+    padding: 0 0.5rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+    text-decoration-thickness: 0.05rem;
+    text-transform: uppercase;
+  }
+
+  #name span {
+    font-weight: bold;
+    text-decoration: none;
+    text-transform:uppercase;
+  }
+}
+
+#attendance-record {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 27%;
+  font-size: 0.6rem;
+  font-weight: bold;
+
+  td:first-child,
+  th:first-child {
+    width: 80%;
+  }
+
+  td:last-child {
+    text-align: center;
+  }
+
+  thead {
+    background-color: gray;
+
+    tr th {
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+  }
+
+  td,th {
+    padding:0.2rem 0.3rem;
+    border: 1px solid black;
+  }
+}
+
+#health-record {
+  width:40%;
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: relative;
+  bottom:4.5rem;
+  left:23rem;
+  height: 4rem;
+
+  th,td {
+    padding:0.2rem;
+    border: 1px solid black;
+  }
+
+  thead tr:first-child th {
+    background-color: grey;
+    font-size: 0.8rem;
+  }
+
+  td {
+    text-align: center;
+  }
+}
+
+#observations {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 23.2%;
+  font-size: 0.55rem;
+  font-weight: bold;
+  position: absolute;
+  bottom: 21rem;
+
+  th:first-child,
+  td:first-child {
+    text-align:left;
+  }
+
+  th,td {
+    padding: 0.2rem 0.3rem;
+    border: 1px solid black;
+  }
+}
+
+#result {
+  border-collapse: collapse;
+  width: 68%;
+  font-size: 0.8rem;
+  font-weight: bold;
+  position: relative;
+  bottom: 3rem;
+  left: 15rem;
+
+  th:nth-last-child(3),
+  td:nth-child(3) {
+    width: 0.5rem;
+  }
+
+  thead {
+    tr:first-child th:first-child {
+      text-align: center;
+      background-color: grey;
+      font-size: 0.9rem;
+    }
+
+    tr:last-child {
+      background-color: grey;
+    }
+  }
+
+  th,td {
+    padding:0.4rem;
+    border: 1px solid black;
+    text-align: center;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 27%;
+    text-align: left;
+  }
+
+  tbody tr:last-child {
+    td:first-child {
+      border: none;
+    }
+  }
+}
+
+#rating-key {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 25%;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  bottom: 9rem;
+
+  th,td {
+    border: 1px solid black;
+    padding: 0.3rem;
+    text-align: left;
+  }
+
+  th {
+    background-color: grey;
+  }
+}
+
+#overall-remark {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 22%;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  bottom: 4rem;
+  left:4rem;
+
+  td {
+    border: 1px solid grey;
+    padding:0.4rem;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  td:first-child {
+    width: 80%;
+  }
+}
+
+#grade-key {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 55%;
+  font-size: 0.6rem;
+  font-weight: bold;
+  position: absolute;
+  bottom: 15rem;
+  left: 21rem;
+  table-layout: fixed;
+
+  td,th {
+    border: 1px solid grey;
+    text-align: center;
+    padding: 0.1rem;
+  }
+
+  tr:nth-child(2) {
+    background-color: grey;
+  }
+}
+
+footer {
+  position: absolute;
+  width: 57%;
+  bottom: 4rem;
+  left: 21rem;
+  font-weight: bold;
+
+  >div {
+    border: 2px solid rgb(0, 0, 78);
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  >div>div:last-child {
+    text-align: right;
+  }
+
+  span {
+    font-weight: normal;
+  }
+
+  >div > div:first-child span {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
+}

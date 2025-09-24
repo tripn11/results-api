@@ -7,14 +7,20 @@
     </head>
     <body>
         <div class="header">
-            <!-- <img src="" alt="School Logo"> -->
-            <div id="school-name"></div>
-            <div id="school-address"></div>
-            <div id="contact"></div>
-            <div id="email"></div>
-            <div id="title">CONTINUOUS ASSESSMENT RESULT</div>
-            <div id="session"><span></span>&nbsp;ACADEMIC SESSION</div>
-            <div id="term"><span></span>&nbsp;TERM</div>
+            <div>
+                <!-- must be like this for pageCreator to insert the logo-->
+                <img /> 
+            </div>
+            <div>
+                <div id="school-name" ></div>
+                <div id="school-address"></div>
+                <div id="contact">Tel:<span></span></div>
+                <div id="email">Email:<span></span></div>
+                <div id="title">CONTINUOUS ASSESSMENT RESULT</div>
+                <div id="session"><span></span>&nbsp;ACADEMIC SESSION</div>
+                <div id="term"><span></span>&nbsp;TERM</div>
+            </div>
+            
         </div>
         <div class="info">
             <div id="name">Name:&nbsp;<span></span></div>
@@ -26,30 +32,36 @@
         <table id="result">
             <thead>
                 <tr>
-                    <th>Subjects</th>
+                    <th>SUBJECTS</th>
                     <!-- other grades will be inserted here -->
-                    <th>Total</th>
-                    <th>Position</th>
-                    <th>Remark</th>
+                    <th>TOTAL</th>
+                    <th>POSITION</th>
+                    <th>REMARK</th>
                 </tr>
                 <tr>
                     <th></th>
                     <!-- grade scales will be inserted here-->
+                     <th></th>
+                     <th></th>
                 </tr>
             </thead>
             
             <tbody >
                 <!-- Results will be dynamically inserted here -->
-                 <tr><td>SUM TOTAL</td><td></td></tr>
-                 <tr><td>AVERAGE</td><td></td></tr>
+                 <tr><td>SUM TOTAL</td><td colspan="2"></td></tr>
+                 <tr><td>AVERAGE</td><td colspan="2"></td></tr>
             </tbody>
         </table>
         <footer>
-            <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
-            <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
-            <div id="teachers-signature">Sign: ________</div>
-            <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
-            <div id="head-teachers-signature">Sign: ________</div>
+            <div>
+                <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
+                <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
+                <div id="teachers-signature">Sign: ________</div>
+            </div>
+            <div>
+                <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
+                <div id="head-teachers-signature">Sign: ________</div>
+            </div>
         </footer>
     </body>
 </html>

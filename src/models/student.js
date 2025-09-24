@@ -79,7 +79,7 @@ studentSchema.virtual('results', {
     foreignField:'owner'
 })
 
-studentSchema.methods.getTermResult = async function (school,section,teachersName) {
+studentSchema.methods.getTermResult = async function (school,section,teachersName,teachersTitle) {
     const grading= school.classes[section].grading;
     const sectionSubjects = school.classes[section].subjects;
     const currentTerm = school.termInfo.currentTerm
@@ -117,6 +117,7 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
             term:currentTerm,
             className:this.class,
             teachersName,
+            teachersTitle,
             subjects
         }
     

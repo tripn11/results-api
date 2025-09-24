@@ -7,14 +7,16 @@
     </head>
     <body>
         <div class="header">
-            <!-- <img src="" alt="School Logo"> -->
-            <div id="school-name"></div>
-            <div id="school-address"></div>
-            <div id="contact"></div>
-            <div id="email"></div>
-            <div id="title">End of Term Report</div>
-            <div id="session"><span></span>&nbsp; SESSION</div>
-            <div id="term"><span></span>&nbsp;TERM</div>
+            <div><img /></div>
+            <div>
+                <div id="school-name"></div>
+                <div id="school-address"></div>
+                <div id="contact">Tel: <span></span></div>
+                <div id="email">Email: <span></span></div>
+                <div id="title">End of Term Report</div>
+                <div id="session"><span></span>&nbsp; SESSION</div>
+                <div id="term"><span></span>&nbsp;TERM</div>
+            </div>
         </div>
         <div class="info">
             <div id="name">Name:&nbsp;<span></span></div>
@@ -31,7 +33,7 @@
         <table id="attendance-record">
             <thead>
                 <tr>
-                    <th>ATTENDANCE RECORD</th>
+                    <th colspan="2">ATTENDANCE RECORD</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,14 +47,13 @@
         <table id="health-record">
             <thead>
                 <tr>
-                    <th>HEALTH RECORD</th>
+                    <th colspan="3">HEALTH RECORD</th>
                 </tr>
                 <tr>
                     <th>WEIGHT(KG)</th>
                     <th>HEIGHT(M)</th>
                     <th>GENERAL HEALTH</th>
                 </tr>
-                <tr><th></th><th></th><th></th></tr>
             </thead>
             <tbody>
                 <tr>
@@ -98,7 +99,7 @@
 
         <table id="result">
             <thead>
-                <tr>ACADEMIC REPORT</tr>
+                <tr><th colspan="7">ACADEMIC REPORT</th></tr>
                 <tr>
                     <th>Subjects</th>
                     <th>CA</th>
@@ -111,6 +112,7 @@
                 <tr>
                     <th></th>
                     <!-- grade scales will be inserted here-->
+                    <th colspan="2"></th>
                 </tr>
             </thead>
             
@@ -122,7 +124,7 @@
        <table id="rating-key">
             <thead><tr><th>RATING KEY</th></tr></thead>
             <tbody>
-                <tr><td>5. Maintains an excellence degree of observed trait</td></tr>
+                <tr><td>5. Maintains an excellent degree of observed trait</td></tr>
                 <tr><td>4. Maintains a high level of observed trait</td></tr>
                 <tr><td>3. Maintains acceptable level</td></tr>
                 <tr><td>2. Shows minimal regard for trait</td></tr>
@@ -165,11 +167,16 @@
        </table>
 
         <footer>
-            <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
-            <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
-            <div id="teachers-signature">Sign: ________</div>
-            <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
-            <div id="head-teachers-signature">Sign: ________</div>
+            <div>
+                <div id="teachers-comment">Form Teacher's Remark:&nbsp; <span></span></div>
+                <div id="teachers-name">Name of Teacher:&nbsp; <span></span></div>
+                <div id="teachers-signature">Sign: ________</div>
+            </div>
+
+            <div>
+                <div id="principals-comment">Head Teacher's Remark:&nbsp; <span></span></div>
+                <div id="head-teachers-signature">Sign: ________</div>
+            </div>
         </footer>
     </body>
 </html>

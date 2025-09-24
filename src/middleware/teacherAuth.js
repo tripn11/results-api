@@ -33,7 +33,7 @@ const teacherAuth = async (req,res,next) =>{
         req.section = section;
         req.class = teachersClass;
         req.teachersName = teachersName;
-        req.teachersTitle = teachersTitle;
+        req.teachersTitle = teachersTitle
         next()
 
     }catch (e) {
