@@ -34,13 +34,11 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
         const currentTerm = req.school.termInfo.currentTerm !== undefined
         const currentSession = req.school.termInfo.currentSession !== undefined
         const isAdminReady = grading && sectionSubjects && currentTerm && currentSession
-        console.log(isAdminReady)
 
         const page = req.query.page;
         const response = await Student.getStudentsInClass(req.school._id,req.class,page)
-        console.log(response.students)
         
-        if(!response.students) {
+        if(response.students.length===0) {
             throw new Error('No students found')
         }
 
@@ -61,7 +59,7 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
             throw new Error ("Admin must set the grading, subjects, and term info")
         }
     }catch(e) {
-        res.send(e.message)
+        res.status(400).send(e.message)
     }
 })
 
@@ -70,7 +68,7 @@ router.get('/students/totalNumber',auth, async(req,res) => {
         const number = await Student.totalStudentsInSchool(req.school._id)
         res.status(200).send({number})
     } catch (e) {
-        res.send(e.message)
+        res.status(400).send(e.message)
     }   
 })
 

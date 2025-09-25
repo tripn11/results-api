@@ -61,9 +61,13 @@ router.post("/schools/logout", auth, async (req, res) =>{
 })
 
 router.post("/schools/logoutAll", auth, async (req,res)=>{
-    req.school.tokens=[]
-    await req.school.save();
-    res.send(req.school.name+' has sucessfully logged out on all devices')
+    try{
+        req.school.tokens=[]
+        await req.school.save();
+        res.send(req.school.name+' has sucessfully logged out on all devices')
+    }catch (e) {
+        res.status(500).send(e)
+    }
 })
 
 router.patch("/schools", auth, async (req,res) => {
@@ -84,6 +88,5 @@ router.delete("/schools", auth, async (req,res) => {
         res.status(500).send(e.message)
     }
 })
-
 
 export default router;
