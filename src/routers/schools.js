@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { School } from '../models/school.js';
 import auth from '../middleware/auth.js';
+import ownerAuth from '../middleware/ownerAuth.js';
 
 const router = new express.Router();
 
@@ -70,6 +71,15 @@ router.post("/schools/logoutAll", auth, async (req,res)=>{
     }
 })
 
+router.get("/schools", ownerAuth, async (_,res) => {
+    try{
+        const schools = await School.find({})
+        res.send(schools)
+    }catch(e) {
+        res.status(500).send(e.message)
+    }
+})
+
 router.patch("/schools", auth, async (req,res) => {
     try{
         req.school.set(req.body)        
@@ -77,6 +87,20 @@ router.patch("/schools", auth, async (req,res) => {
         res.send("updated")
     }catch(e) {
         res.status(400).send(e.message)
+    }
+})
+
+router.patch("/schools/:id", ownerAuth, async (req, res) => {
+    try {
+        const school = await School.findById(req.params.id)
+        if(!school) {
+            throw new Error('School not found')
+        }
+        school.status = req.body.status
+        await school.save()
+        res.send('School status updated')
+    }catch(e) {
+        res.status(500).send(e.message)
     }
 })
 
