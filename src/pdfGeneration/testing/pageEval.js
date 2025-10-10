@@ -8,7 +8,7 @@ export default async (page, result, details, type) => {
   Object.keys(actualSubjectPosition).forEach(subject => {
     actualSubjectPosition[subject] = ordinal(actualSubjectPosition[subject].findIndex(res=>res._id.equals(result._id))+1);
   })
-  const studentName = details.student.fullName; //for some reason, its not seen inside page.eval
+  const studentName = details.student.fullName; //for some reason, its not seen inside pageEval
  
   return await page.evaluate(({ result, details, type, actualSubjectPosition, actualClassAverage, actualSubjectClassAverage, studentName }) => {
     const byQuery = (selector,text) => {

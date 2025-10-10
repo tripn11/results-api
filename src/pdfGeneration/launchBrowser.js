@@ -1,22 +1,27 @@
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import puppeteerCore from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer';
 
-export default async () => {
-  const browser = await puppeteer.launch({
-    // These args are recommended for cloud environments
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    
-    // This is the crucial part: get the path from the chromium package
-    executablePath: await chromium.executablePath(),
+const launchBrowser = async () => {
+  let browser;
 
-    // Use the headless mode from the chromium package
-    headless: chromium.headless,
-
-    // Other options
-    ignoreHTTPSErrors: true,
-    timeout: 60000,
-  });
+  if (process.env.NODE_ENV === 'production') {
+    browser = await puppeteerCore.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
+      timeout: 60000,
+    });
+  } else {
+    browser = await puppeteer.launch({
+      headless: true,
+      timeout: 60000,
+    });
+  }
 
   return browser;
 };
+
+export default launchBrowser;
