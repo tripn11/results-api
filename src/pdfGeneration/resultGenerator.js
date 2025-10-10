@@ -34,7 +34,7 @@ const resultGenerator = async (results,type) => {
         await browser.close();
         return pdfResults
     } catch (e) {
-        res.status(400).send(e)
+        throw e;
     }
 };
 

@@ -88,6 +88,4 @@ router.get('/result', studentOrTeacherAuth , async (req, res) => {
     }
 })
 
-router.get
-
 export default router;
