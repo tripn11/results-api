@@ -83,6 +83,7 @@ router.get('/student', studentAuth, async(req, res) => {
             fullName: req.student.fullName, 
             class:req.student.class, 
             term: req.student.school.termInfo.currentTerm,
+            schoolName: req.student.school.name,
             classes
         }
         res.send(details)

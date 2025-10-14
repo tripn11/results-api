@@ -1,7 +1,8 @@
+import path from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
 import launchBrowser from './launchBrowser.js';
 import detailsCompiler from './details.js';
 import pageCreator from './pageCreator.js';
-import pageEval from './testing/pageEval.js';
 import styler from './styler.js';
 import { Result } from "../models/result.js";
 
@@ -21,6 +22,13 @@ const resultGenerator = async (results,type) => {
         await Promise.all(results.map(async result=>{             
             const details = await detailsCompiler(result, classResults)
             const page = await pageCreator(browser, details.schoolName, type)
+
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const pageEvalPath = path.join(__dirname, details.schoolName, 'pageEval.js');
+            const pageEvalUrl = pathToFileURL(pageEvalPath).href;
+            const { default: pageEval } = await import(pageEvalUrl);
+
             await pageEval(page,result,details,type)
             await styler(page, details.schoolName, type)
             const finalResult = await page.pdf({
