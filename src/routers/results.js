@@ -85,8 +85,8 @@ router.get('/result', studentOrTeacherAuth , async (req, res) => {
         res.setHeader('Content-Length', pdfResult.file.length);
         res.end(Buffer.from(pdfResult.file));
     }catch (e) {
-            res.status(400).send(e.message)
-        }
+        res.status(400).send(e.message)
+    }
 })
 
 export default router;
