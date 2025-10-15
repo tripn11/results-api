@@ -84,7 +84,7 @@ router.get('/result', studentOrTeacherAuth , async (req, res) => {
         const [pdfResult] = await resultGenerator([result], details.type);
         res.setHeader('Content-Length', pdfResult.file.length);
         res.end(Buffer.from(pdfResult.file));
-        }catch (e) {
+    }catch (e) {
             res.status(400).send(e.message)
         }
 })
