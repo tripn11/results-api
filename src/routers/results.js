@@ -81,11 +81,12 @@ router.get('/result', studentOrTeacherAuth , async (req, res) => {
         if(!result) {
             throw new Error("Result not found")
         }
-        const finalResults = await resultGenerator([result],details.type)
-        res.json(finalResults)
-    }catch (e) {
-        res.status(400).send(e.message)
-    }
+        const [pdfResult] = await resultGenerator([result], details.type);
+        res.setHeader('Content-Length', pdfResult.file.length);
+        res.end(Buffer.from(pdfResult.file));
+        }catch (e) {
+            res.status(400).send(e.message)
+        }
 })
 
 export default router;
