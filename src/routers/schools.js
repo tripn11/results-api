@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { School } from '../models/school.js';
+import { Student } from '../models/student.js';
 import auth from '../middleware/auth.js';
 import ownerAuth from '../middleware/ownerAuth.js';
 
@@ -73,12 +74,22 @@ router.post("/schools/logoutAll", auth, async (req,res)=>{
 
 router.get("/schools", ownerAuth, async (_,res) => {
     try{
-        const schools = await School.find({})
-        res.send(schools)
+        const schools = await School.find({});
+        const schoolDetails = await Promise.all(schools.map(async school=>{
+            const population = await Student.countDocuments({school:school._id,status:"active"})
+            return ({
+                _id:school._id,
+                name: school.name,
+                approved: school.approved,
+                population
+            })
+        }))
+        res.send(schoolDetails);
     }catch(e) {
         res.status(500).send(e.message)
     }
 })
+
 
 router.patch("/schools", auth, async (req,res) => {
     try{
@@ -90,15 +101,17 @@ router.patch("/schools", auth, async (req,res) => {
     }
 })
 
-router.patch("/schools/:id", ownerAuth, async (req, res) => {
+router.patch("/overallSchools", ownerAuth, async (req, res) => {
     try {
-        const school = await School.findById(req.params.id)
-        if(!school) {
-            throw new Error('School not found')
-        }
-        school.status = req.body.status
-        await school.save()
-        res.send('School status updated')
+        const operations = Object.values(req.body).map(school => ({
+            updateOne: {
+                filter: { _id: school._id },
+                update: { $set: { approved: school.approved } },
+            }
+        }));
+
+        await School.bulkWrite(operations, { ordered: false });
+        res.send("updated successfully");
     }catch(e) {
         res.status(500).send(e.message)
     }

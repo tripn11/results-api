@@ -27,6 +27,7 @@ const schoolSchema = new mongoose.Schema({
     },
     phoneNumber:{
         type:String,
+        required: true,
         validate(number) {
             if(!validator.isMobilePhone(number,'en-NG')) {
                 throw new Error('Not a Phone Number')
@@ -62,6 +63,10 @@ const schoolSchema = new mongoose.Schema({
         currentTerm:String
     },
     tokens: [String],
+    approved:{
+        type:Boolean,
+        default:false,
+    },
     classes:{
         nursery:{
             classes:{
