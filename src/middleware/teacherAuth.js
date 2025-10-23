@@ -19,6 +19,10 @@ const teacherAuth = async (req,res,next) =>{
             throw new Error ('Invalid Authorization Code')
         }
 
+        if(school.approved===false) {
+            throw new Error('School Account Inactive. Please contact School Administrator')
+        }
+
         const section = Object.keys(school.classes)
         .find(section => school.classes[section].classes
         .some(c=>c.code===code && c.class===teachersClass))

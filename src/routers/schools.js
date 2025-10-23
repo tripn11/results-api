@@ -37,9 +37,14 @@ router.post("/schools/login", async (req,res) => {
         if(school===null) {
             throw new Error ('Incorrect Login Details')
         }
+
+
         const correctPassword = await bcrypt.compare(req.body.password, school.password)
 
         if(correctPassword) {
+            if(school.approved===false) {
+                throw new Error ("Your account is inactive. Please subscribe to activate or contact support");
+            }
             const token = school.generateAuthToken()
             await school.save()
             res.status(200).send({school,token})
@@ -81,7 +86,8 @@ router.get("/schools", ownerAuth, async (_,res) => {
                 _id:school._id,
                 name: school.name,
                 approved: school.approved,
-                population
+                phoneNumber:school.phoneNumber,
+                population,
             })
         }))
         res.send(schoolDetails);

@@ -16,6 +16,24 @@ router.post('/students', auth, async(req,res) =>{
     }
 })
 
+router.post('/students/promote', auth, async (req, res) => {
+    try {
+        await Student.promoteStudents(req.school);
+        res.send({ message: 'All students have been promoted successfully' });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+});
+
+router.post('/students/resetCodes', auth, async (req, res) => {
+    try {
+        await Student.resetCodes(req.school._id);
+        res.send({ message: 'All student codes have been reset successfully.' });
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+})
+
 router.get('/sectionStudents', auth, async(req,res) => {
     try {
         const section = req.query.section;
@@ -76,6 +94,11 @@ router.get('/students/totalNumber',auth, async(req,res) => {
 router.get('/student', studentAuth, async(req, res) => {
     try{
         await req.student.populate('school');
+
+        if(req.student.school.approved===false) {
+            throw new Error('School Account Inactive. Please contact School Administrator')
+        }
+        
         const classes = Object.values(req.student.school.classes)
                         .flatMap(section => section.classes.map(c => c.class));
                         
@@ -112,24 +135,6 @@ router.delete('/students/:id', auth, async(req,res) => {
         res.send(student)
     } catch (e) {
         res.status(400).send(e.message)
-    }
-})
-
-router.post('/students/promote', auth, async (req, res) => {
-    try {
-        await Student.promoteStudents(req.school);
-        res.send({ message: 'All students have been promoted successfully' });
-    } catch (e) {
-        res.status(500).send({ error: e.message });
-    }
-});
-
-router.post('/students/resetCodes', auth, async (req, res) => {
-    try {
-        await Student.resetCodes(req.school._id);
-        res.send({ message: 'All student codes have been reset successfully.' });
-    } catch (e) {
-        res.status(500).send({ error: e.message });
     }
 })
 
