@@ -135,7 +135,7 @@ studentSchema.statics.getStudentsInClass = async (schoolId, level, page = 1) => 
     let skip = (page - 1) * 10;
     const students = await Student.find({ school: schoolId, class: level })
         .sort({ "name.surName": 1 })
-        .limit(20)
+        .limit(10)
         .skip(skip);
 
     const total = await Student.countDocuments({ school: schoolId, class: level });

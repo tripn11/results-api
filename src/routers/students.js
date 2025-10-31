@@ -73,6 +73,7 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
                 teachersClass: req.class,
                 totalStudentsInClass: response.total,
                 timesSchoolOpened:req.school.termInfo.totalTimesSchoolOpened,
+                schoolName: req.school.name,
             })
         } else {
             throw new Error ("Admin must set the grading, subjects, and term info")
