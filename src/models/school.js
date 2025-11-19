@@ -71,7 +71,10 @@ const schoolSchema = new mongoose.Schema({
         nursery:{
             classes:{
                 type:[{
-                    class:String,
+                    class: {
+                        type:String,
+                        required:true,
+                    },
                     code:String,
                     teachersTitle:String,
                     teachersName:String,

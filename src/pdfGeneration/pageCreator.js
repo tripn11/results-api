@@ -12,6 +12,9 @@ export default async (browser, schoolName, type) => {
   const __dirname = path.dirname(__filename);
   const filePath = path.join(__dirname, schoolName, file);
 
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`${schoolName} does not have a ${type.toUpperCase()} Result Template!`);
+  }
   let html = fs.readFileSync(filePath, 'utf8');
 
   // ✅ Try both .jpg and .png logos
