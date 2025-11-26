@@ -34,7 +34,7 @@ router.get('/schoolResult', auth , async(req,res) => {
         if(details.studentName!=='') {
             const [surName, firstName] = details.studentName
             .trim()
-            .lowerCase()
+            .toLowerCase()
             .split(" ")
             
             const student = await Student.findOne({
