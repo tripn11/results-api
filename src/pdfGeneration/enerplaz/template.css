@@ -52,6 +52,10 @@ h1 {
   border: 1px solid #c4d7c0;
 }
 
+.student-name > td:last-child {
+  text-transform: capitalize;
+}
+
 .trainee-info td {
   padding: 8px 10px;
   border: 1px solid #c4d7c0;
