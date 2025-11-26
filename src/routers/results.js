@@ -32,7 +32,11 @@ router.get('/schoolResult', auth , async(req,res) => {
         const details = req.query;
         let results = [];
         if(details.studentName!=='') {
-            const [surName, firstName] = details.studentName.split(" ")
+            const [surName, firstName] = details.studentName
+            .trim()
+            .lowerCase()
+            .split(" ")
+            
             const student = await Student.findOne({
                 "name.firstName":firstName,
                 "name.surName":surName

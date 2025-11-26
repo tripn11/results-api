@@ -7,16 +7,19 @@ const studentSchema = new mongoose.Schema({
             firstName:{
                 type:String, 
                 trim:true, 
-                required:true
+                required:true,
+                lowercase:true
             },
             surName:{
                 type:String, 
                 trim:true, 
-                required:true
+                required:true,
+                lowercase:true
             },
             otherName:{
                 type:String,
-                trim:true
+                trim:true,
+                lowercase:true
             },
             _id:false
         }),
