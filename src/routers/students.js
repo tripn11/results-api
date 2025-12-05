@@ -61,6 +61,7 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
         }
 
         if(isAdminReady) {
+
             const results = await Promise.all(response.students.map(async(student)=>{
                 const studentResult = await student.getTermResult(req.school,req.section,req.teachersName, req.teachersTitle)
                 return studentResult;
@@ -68,17 +69,14 @@ router.get('/classStudents',teacherAuth, async(req,res) => {
             res.send({
                 students: response.students.map(student => student.toJSON({ virtuals: true })),
                 results,
-                teachersTitle: req.teachersTitle,
-                teachersName: req.teachersName,
-                teachersClass: req.class,
                 totalStudentsInClass: response.total,
-                timesSchoolOpened:req.school.termInfo.totalTimesSchoolOpened,
                 schoolName: req.school.name,
             })
         } else {
             throw new Error ("Admin must set the grading, subjects, and term info")
         }
     }catch(e) {
+        console.log(e)
         res.status(400).send(e.message)
     }
 })

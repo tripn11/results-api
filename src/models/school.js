@@ -37,6 +37,7 @@ const schoolSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        immutable:true,
         validate (value) {
             if(validator.isStrongPassword(value,{
                 minLength: 6,
@@ -59,8 +60,17 @@ const schoolSchema = new mongoose.Schema({
             type:Number,
             default:0
         },
-        currentSession:String,
-        currentTerm:String
+        currentSession:{
+            type:String,
+            default:() => {
+                const year = new Date().getFullYear();
+                return `${year - 1}/${year}`;
+            }
+        },
+        currentTerm:{
+            type:String,
+            default:'first'
+        }
     },
     tokens: [String],
     approved:{
@@ -73,12 +83,10 @@ const schoolSchema = new mongoose.Schema({
                 type:[{
                     class: {
                         type:String,
-                        required:true,
                     },
                     code:String,
                     teachersTitle:String,
                     teachersName:String,
-                    _id:false
                 }],
                 default:[
                     {class:'nursery 1'},
@@ -98,11 +106,12 @@ const schoolSchema = new mongoose.Schema({
         primary:{
             classes:{
                 type:[{
-                    class:String,
+                    class:{
+                        type:String,
+                    },
                     code:String,
                     teachersTitle:String,
                     teachersName:String,
-                    _id:false
                 }],
                 default:[
                     {class:'year 1'},
@@ -124,11 +133,12 @@ const schoolSchema = new mongoose.Schema({
         juniorSecondary:{
             classes:{
                 type:[{
-                    class:String,
+                    class:{
+                        type:String,
+                    },
                     code:String,
                     teachersTitle:String,
                     teachersName:String,
-                    _id:false
                 }],
                 default:[
                     {class:'jss 1'},
@@ -148,11 +158,12 @@ const schoolSchema = new mongoose.Schema({
         seniorSecondary:{
             classes:{
                 type:[{
-                    class:String,
+                    class:{
+                        type:String,
+                    },
                     code:String,
                     teachersTitle:String,
                     teachersName:String,
-                    _id:false
                 }],
                 default:[
                     {class:'ss 1'},

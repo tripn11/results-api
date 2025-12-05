@@ -2,8 +2,10 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { School } from '../models/school.js';
 import { Student } from '../models/student.js';
+import { Result } from '../models/result.js';
 import auth from '../middleware/auth.js';
 import ownerAuth from '../middleware/ownerAuth.js';
+import { set } from 'mongoose';
 
 const router = new express.Router();
 
@@ -98,9 +100,47 @@ router.get("/schools", ownerAuth, async (_,res) => {
 
 
 router.patch("/schools", auth, async (req,res) => {
-    try{
+    const modifiedClassNames = JSON.parse(req.header('modifiedClassNames') || '[]');
+
+    try {
+        //save the new classes
         req.school.set(req.body)        
         await req.school.save()
+
+        //update students and results with modified class names
+        if (modifiedClassNames.length > 0) {
+            const studentUpdates = modifiedClassNames.map(className =>
+                Student.updateMany(
+                    {
+                        school: req.school._id,
+                        class: className.formerName
+                    },
+                    {
+                        class: className.newName
+                    }
+                )
+            );
+
+            const resultUpdates = modifiedClassNames.map(className =>
+                Result.updateMany(
+                    {
+                        school: req.school._id,
+                        className: className.formerName,
+                        session: req.school.termInfo.currentSession,
+                        term: req.school.termInfo.currentTerm
+                    },
+                    {
+                        className: className.newName
+                    }
+                )
+            );
+
+            await Promise.all([
+                ...studentUpdates,
+                ...resultUpdates
+            ]);
+        }
+
         res.send("updated")
     }catch(e) {
         res.status(400).send(e.message)

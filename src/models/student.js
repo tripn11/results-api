@@ -87,6 +87,7 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
     const sectionSubjects = school.classes[section].subjects;
     const currentTerm = school.termInfo.currentTerm
     const currentSession = school.termInfo.currentSession
+    const timesSchoolOpened = school.termInfo.totalTimesSchoolOpened
 
     const grade = {}
     const subjects = {}
@@ -100,20 +101,53 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
         }
     })
 
-    if(this.results.length>0) {
-        return this.results[0]
-    }else{
-        grading.forEach(each=>{
-            grade[each]=each.split('-')[1]
-        })
-        const examGrade = 100 - Object.values(grade).reduce((total,val)=> total + Number(val),0)
-        grade[`exam-${examGrade}`] = examGrade;
+    grading.forEach(each=>{
+        grade[each]=each.split('-')[1]
+    })
+    const examGrade = 100 - Object.values(grade).reduce((total,val)=> total + Number(val),0)
+    grade[`exam-${examGrade}`] = examGrade;
 
+    if(this.results.length > 0) {
+        const resultSubjects = Object.keys(this.results[0].subjects);
+        const resultGrading = Object.keys(Object.values(this.results[0].subjects)[0]).slice(0,-1)
+        if (JSON.stringify(resultGrading) === JSON.stringify(grading)) {
+            sectionSubjects.forEach(each=>{
+                if(resultSubjects.includes(each)) {
+                    subjects[each] = this.results[0].subjects[each]
+                } else {
+                    const [ code ] = each.split('-')[1];
+                    const oldSubject = resultSubjects.find(subj => {
+                        const [code2] = subj.split('-')[1];
+                        return code === code2; 
+                    })
+                    if(oldSubject) {
+                        subjects[each] = this.results[0].subjects[oldSubject]
+                    } else {
+                        subjects[each] = grade
+                    }
+                }
+            })
+        } else {
+            sectionSubjects.forEach(each=>{
+                subjects[each] = grade 
+            })
+        }
+    } else {
         sectionSubjects.forEach(each=>{
-            subjects[each]=grade
+            subjects[each] = grade 
         })
+    }
 
-        const initialResult = {
+    if(this.results.length>0) {
+        return ({
+            ...this.results[0].toObject(),
+            subjects,
+            teachersName,
+            teachersTitle,
+            timesSchoolOpened
+        })
+    } else {
+        return ({
             owner:this._id,
             school:this.school,
             session:currentSession,
@@ -121,12 +155,11 @@ studentSchema.methods.getTermResult = async function (school,section,teachersNam
             className:this.class,
             teachersName,
             teachersTitle,
-            subjects
-        }
-    
-        return initialResult
-    }     
-}
+            subjects,
+            timesSchoolOpened
+        })
+    }
+}    
 
 studentSchema.methods.totalStudentsInClass = async function () {
     const totalStudents = await Student.countDocuments({school:this.school,class:this.class});
