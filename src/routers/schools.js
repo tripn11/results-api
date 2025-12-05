@@ -5,7 +5,6 @@ import { Student } from '../models/student.js';
 import { Result } from '../models/result.js';
 import auth from '../middleware/auth.js';
 import ownerAuth from '../middleware/ownerAuth.js';
-import { set } from 'mongoose';
 
 const router = new express.Router();
 
@@ -163,10 +162,12 @@ router.patch("/overallSchools", ownerAuth, async (req, res) => {
     }
 })
 
-router.delete("/schools", auth, async (req,res) => {
+router.delete("/schools/:id", ownerAuth, async (req,res) => {
     try {
-        await req.school.deleteOne()
-        res.send('Goodbye '+req.school.name)
+        await School.findByIdAndDelete(req.params.id)
+        await Student.deleteMany({school:req.params.id})
+        await Result.deleteMany({school:req.params.id})
+        res.send('successfully deleted')
     }catch(e) {
         res.status(500).send(e.message)
     }

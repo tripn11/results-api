@@ -85,7 +85,10 @@ const schoolSchema = new mongoose.Schema({
                         type:String,
                     },
                     code:String,
-                    teachersTitle:String,
+                    teachersTitle:{
+                        type:String,
+                        default: 'Mr'
+                    },
                     teachersName:String,
                 }],
                 default:[
